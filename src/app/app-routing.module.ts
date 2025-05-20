@@ -5,10 +5,13 @@ import { HomeComponent } from './home/home.component';
 import { ProductDetailsComponent } from './shop/product-details/product-details.component';
 
 const routes: Routes = [
-  {path:'',component:HomeComponent},
-  {path:'shop',component:ShopComponent},
-  {path:'product-details/:id',component:ProductDetailsComponent},
-  {path:'**',redirectTo:'',pathMatch:'full'},
+  { path: '', component: HomeComponent },
+  {
+    path: 'shop',
+    loadChildren: () => import('./shop/shop.module').then((m) => m.ShopModule),
+  },
+  // {path:'product-details/:id',component:ProductDetailsComponent},
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({

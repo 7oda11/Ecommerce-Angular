@@ -20,7 +20,7 @@ import { HomeComponent } from './home/home.component';
     AppRoutingModule,
     CoreModule,
     HttpClientModule,
-    ShopModule
+    
   ],
   providers: [
     provideClientHydration(withEventReplay()),
