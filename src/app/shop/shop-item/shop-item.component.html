@@ -1,0 +1,54 @@
+  <div class="card position-relative p-2" style="min-height: 480px;">
+    <div style="position: relative;">
+      <img [src]="Product.photos?.length ? 'https://localhost:44306/' + Product.photos[0].imageName : 'https://placehold.co/400x300?text=No+Image'"
+        class="card-img-top" [alt]="Product.name"
+        style="height: 170px; object-fit: cover; border-radius: 10px;">
+      <!-- CPU Icon overlay -->
+      <span
+        style="position: absolute; top: 10px; left: 10px; background: #fff; border-radius: 6px; padding: 2px 8px; display: flex; align-items: center; gap: 2px; font-size: 0.95rem;">
+        <i class="material-icons" style="font-size: 1.1rem; color: #2d2d6e;">memory</i>
+        Intel Core i9
+      </span>
+    </div>
+    <div class="thumbnails mt-2 mb-2">
+      @if (Product.photos?.length) {
+        @for (item of Product.photos; track $index) {
+          <img [src]="'https://localhost:44306/' + item.imageName" class="small-img" [alt]="'thumbnail ' + ($index + 1)">
+        }
+      } @else {
+        <div class="d-flex gap-2">
+          <img src="https://placehold.co/100x100?text=1" class="small-img" alt="placeholder thumbnail">
+          <img src="https://placehold.co/100x100?text=2" class="small-img" alt="placeholder thumbnail">
+          <img src="https://placehold.co/100x100?text=3" class="small-img" alt="placeholder thumbnail">
+        </div>
+      }
+    </div>
+    <!-- Bookmark Icon -->
+    <button class="favorite-icon position-absolute bg-transparent border-0" style="top: 10px; right: 10px;">
+      <i class="material-icons" style="font-size: 1.5rem; color: #007bff;">bookmark_border</i>
+    </button>
+    <div class="card-body p-2">
+      <h5 class="card-title fw-bold"
+        style="background: #2d2d6e; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 1.1rem; display: inline-block;">
+      {{ Product.name }}</h5>
+      <div class="card-text" style="color: #2d2d6e; font-size: 0.95rem; font-weight: 500;">Category:{{ Product.categoryName }}</div>
+      <div class="card-text" style="font-size: 0.9rem; color: #888;">{{ Product.description }}</div>
+      <div class="price mt-2 mb-2">
+        <span class="old-price"
+          style="text-decoration: line-through; color: #dc3545; font-size: 1.1rem;">{{ Product.oldPrice }}</span>
+        <span class="fw-bold" style="font-size: 1.2rem; color: #222;">{{ Product.newPrice }}</span>
+      </div>
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-dark flex-fill"
+          style="font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
+          <i class="material-icons" style="font-size: 1.1rem;">shopping_cart</i>
+          Add to Cart
+        </button>
+        <button class="btn btn-success flex-fill"
+          style="font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
+          <i class="material-icons" style="font-size: 1.1rem;">check_circle</i>
+          Details
+        </button>
+      </div>
+    </div>
+  </div>
