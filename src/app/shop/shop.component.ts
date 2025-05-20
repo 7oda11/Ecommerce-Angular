@@ -9,6 +9,7 @@ import { ShopService } from './shop.service';
 import { IPagination } from '../core/shared/Models/Pagination';
 import { IProduct } from '../core/shared/Models/Products';
 import { ICategory } from '../core/shared/Models/Category';
+import { ProductParam } from '../core/shared/Models/ProductParam';
 
 @Component({
   selector: 'app-shop',
@@ -19,33 +20,44 @@ import { ICategory } from '../core/shared/Models/Category';
 export class ShopComponent implements OnInit {
   public product: IProduct[];
   public category: ICategory[];
-  public categoryId: number;
-  public sortSelected: string = 'PriceDes';
+  public totalCount: number;
+  // public categoryId: number;
+  // public sortSelected: string = 'PriceDes';
+  // search: string;
+  productParams = new ProductParam();
 
   constructor(private shopService: ShopService) {}
 
   ngOnInit(): void {
-    console.log('Initial sortSelected:', this.sortSelected);
+    console.log('Initial sortSelected:', this.productParams.sortSelected);
     this.GetAllProduct();
     this.GetAllCategory();
   }
 
   GetAllProduct() {
-    console.log('Getting products with sort:', this.sortSelected, this.search);
-    this.shopService
-      .getProduct(this.categoryId, this.sortSelected, this.search)
-      .subscribe({
-        next: (value: IPagination) => {
-          console.log('Products received:', value.data);
-          this.product = value.data;
-        },
-        error: (err: any) => {
-          console.error('Error fetching products:', err);
-          this.product = [];
-        },
-      });
+    console.log(
+      'Getting products with sort:',
+      this.productParams.sortSelected,
+      this.productParams.search
+    );
+    this.shopService.getProduct(this.productParams).subscribe({
+      next: (value: IPagination) => {
+        console.log('Products received:', value.data);
+        this.product = value.data;
+        this.totalCount = value.totalCount;
+        this.productParams.pageNumber = value.pageNumber;
+        this.productParams.pageSize = value.pageSize;
+      },
+      error: (err: any) => {
+        console.error('Error fetching products:', err);
+        this.product = [];
+      },
+    });
   }
-
+  OnChangePage(event: any) {
+    this.productParams.pageNumber = event;
+    this.GetAllProduct();
+  }
   GetAllCategory() {
     this.shopService.getCategory().subscribe({
       next: (value: any) => {
@@ -55,7 +67,7 @@ export class ShopComponent implements OnInit {
   }
 
   SelectedId(id: number) {
-    this.categoryId = id;
+    this.productParams.categoryId = id;
     this.GetAllProduct();
   }
 
@@ -67,24 +79,28 @@ export class ShopComponent implements OnInit {
 
   SortingByPrice(event: any) {
     const newSort = event.target.value;
-    console.log('Sort changed from', this.sortSelected, 'to', newSort);
-    this.sortSelected = newSort;
+    console.log(
+      'Sort changed from',
+      this.productParams.sortSelected,
+      'to',
+      newSort
+    );
+    this.productParams.sortSelected = newSort;
     this.GetAllProduct();
   }
   //filter product by word
-  search: string;
   OnSearch(search: string) {
-    this.search = search;
+    this.productParams.search = search;
     this.GetAllProduct();
   }
   @ViewChild('search') searchInput: ElementRef;
   @ViewChild('selectItem') selectItem: ElementRef;
   OnReset() {
     this.searchInput.nativeElement.value = '';
-    this.search = '';
-    this.categoryId = 0;
+    this.productParams.search = '';
+    this.productParams.categoryId = 0;
     this.selectItem.nativeElement.selectedIndex = 0;
-    this.sortSelected = this.SortingOption[0].value;
+    this.productParams.sortSelected = this.SortingOption[0].value;
     this.GetAllProduct();
   }
 }

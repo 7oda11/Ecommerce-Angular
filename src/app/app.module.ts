@@ -17,7 +17,6 @@ import { ShopModule } from './shop/shop.module';
     BrowserModule,
     AppRoutingModule,
     CoreModule,
-    SharedModule,
     HttpClientModule,
     ShopModule
   ],
