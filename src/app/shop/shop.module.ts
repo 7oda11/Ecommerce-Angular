@@ -3,17 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ShopComponent } from './shop.component';
 import { ShopItemComponent } from './shop-item/shop-item.component';
 import { SharedModule } from '../core/shared/shared.module';
-
+import { ProductDetailsComponent } from './product-details/product-details.component';
+import { RouterModule } from '@angular/router';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 
 @NgModule({
   declarations: [
     ShopComponent,
-    ShopItemComponent
+    ShopItemComponent,
+    ProductDetailsComponent
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    RouterModule,
+    NgxImageZoomModule
   ],
   exports: [
     ShopComponent

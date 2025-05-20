@@ -1,0 +1,140 @@
+<style>
+  .custom-btn-padding {
+    padding: 0.75rem 2rem !important;
+    font-size: 1.1rem;
+  }
+
+  .custom-input-padding {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 1.1rem;
+    width: 70px;
+    height: 48px;
+    border-radius: 8px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .icon-margin {
+    margin-right: 10px;
+  }
+</style>
+<!-- Add Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-5">
+      <div class="main-img">
+        <lib-ngx-image-zoom [thumbImage]="'https://localhost:44306/'+MainImage"
+          [fullImage]="'https://localhost:44306/'+MainImage" [magnification]="1.3"
+          [enableScrollZoom]="true" [lensWidth]="200" [lensHeight]="200" [enableLens]="true"></lib-ngx-image-zoom>
+        <!-- <img [src]="'https://localhost:44306/'+product.photos[0].imageName" class="w-100" alt="Product Image"> -->
+        <div class="row my-3 previews">
+          @for (photo of product.photos; track $index) {
+          <div class="col-md-3">
+            <img class="w-100" (click)="PeplaceImage(photo.imageName)" [src]="'https://localhost:44306/'+photo.imageName" alt="Thumbnail {{ $index + 1 }}">
+          </div>
+          }
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="main-description px-2">
+        <div class="category text-bold">
+          Category: {{ product.categoryName }}
+        </div>
+        <div class="product-title text-bold my-3">
+          {{ product.name }}
+        </div>
+
+        <div class="price-area my-4">
+          <p class="old-price mb-1"><del>{{ product.oldPrice|currency }}</del> <span
+              class="old-price-discount text-danger">(20% off)</span></p>
+          <p class="new-price text-bold mb-1">{{ product.newPrice|currency }}</p>
+
+          <p class="text-danger">quantity: 1</p>
+          <div>
+            <button class="btn btn-danger text-white" title="Decrease quantity">
+              <i class="fa fa-minus"></i>
+            </button>
+            &nbsp;
+            <button class="btn btn-dark text-white" title="Increase quantity">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="buttons d-flex my-5">
+          <div class="block pt-2">
+            <a href="#" class="shadow btn custom-btn custom-btn-padding">
+              <i class="fa fa-heart"></i>
+              Wishlist</a>
+          </div>
+          <div class="block pt-2">
+            <button class="shadow btn custom-btn custom-btn-padding">
+              <i class="fa fa-shopping-cart"></i>
+              Add to cart</button>
+          </div>
+          <div class="block pt-2">
+            <button class="shadow btn custom-btn custom-btn-padding">
+              <i class="fa fa-shopping-bag"></i>
+              shopping</button>
+          </div>
+          <div class="block quantity">
+            <label for="cart_quantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control custom-input-padding" id="cart_quantity" value="1" min="0" max="5"
+              name="cart_quantity" placeholder="Enter quantity">
+          </div>
+        </div>
+      </div>
+
+      <div class="product-details my-4">
+        <p class="details-title text-color mb-1">Product Details</p>
+        <p class="description">{{ product.description }}</p>
+      </div>
+
+      <div class="row questions bg-light p-3">
+        <div class="col-md-1 icon">
+          <i class="fa fa-brands fa-rocketchat questions-icon"></i>
+        </div>
+        <div class="col-md-11 text">
+          Have a question about our products at E-Store? Feel free to contact our representatives via live chat or
+          email.
+        </div>
+      </div>
+
+      <div class="delivery my-4">
+        <p class="font-weight-bold mb-0"><span><i class="fa fa-solid fa-truck icon-margin"></i></span> <b>Delivery done
+            in 3 days from date of purchase</b></p>
+        <p class="text-secondary">Order now to get this product delivery</p>
+      </div>
+      <div class="delivery-options my-4">
+        <p class="font-weight-bold mb-0"><span><i class="fa fa-solid fa-filter icon-margin"></i></span> <b>Delivery
+            options</b></p>
+        <p class="text-secondary">View delivery options here</p>
+        <button class="btn btn-outline-primary w-100"><strong>show review</strong></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-4">
+  <div class="row">
+    <p class="dispaly-5">Product Review</p>
+    <div class="col-md-4 mb-4">
+      <div class="review-card rounded p-3 shadow-sm border">
+        <div class="d-flex align-items-center mb-2">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/015/271/883/original/business-man-flat-icon-design-human-resource-and-businessman-icon-concept-man-icon-in-trendy-flat-style-symbol-for-your-web-site-design-logo-app-vector.jpg"
+            width="70" class="rounded-circle me-3" alt="User Avatar">
+          <h5 class="text-info p-2" style="font-size: 15px;">John Doe</h5>
+          <h6 class="text-danger">Time-Review: January 1, 2024</h6>
+        </div>
+        <p class="review-text">This is a sample review. The product quality is excellent and the delivery was on time.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
