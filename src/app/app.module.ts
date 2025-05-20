@@ -11,6 +11,8 @@ import { HttpRequestInterceptor } from './core/interceptors/http.interceptor';
 import { ShopModule } from './shop/shop.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { loaderInterceptor } from './core/interceptors/loader.interceptor';
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +23,14 @@ import { loaderInterceptor } from './core/interceptors/loader.interceptor';
     HttpClientModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      closeButton: true,
+      positionClass: 'toast-top-right',
+      timeOut: 3000,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      countDuplicates: true,
+    }), // ToastrModule added
   ],
   providers: [
     provideClientHydration(withEventReplay()),

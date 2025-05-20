@@ -10,6 +10,7 @@ import { IPagination } from '../core/shared/Models/Pagination';
 import { IProduct } from '../core/shared/Models/Products';
 import { ICategory } from '../core/shared/Models/Category';
 import { ProductParam } from '../core/shared/Models/ProductParam';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-shop',
@@ -26,7 +27,7 @@ export class ShopComponent implements OnInit {
   // search: string;
   productParams = new ProductParam();
 
-  constructor(private shopService: ShopService) {}
+  constructor(private shopService: ShopService, private _toastr: ToastrService) {}
 
   ngOnInit(): void {
     console.log('Initial sortSelected:', this.productParams.sortSelected);
@@ -47,6 +48,7 @@ export class ShopComponent implements OnInit {
         this.totalCount = value.totalCount;
         this.productParams.pageNumber = value.pageNumber;
         this.productParams.pageSize = value.pageSize;
+        this._toastr.success('Products fetched successfully',"SUCCESS");
       },
       error: (err: any) => {
         console.error('Error fetching products:', err);
