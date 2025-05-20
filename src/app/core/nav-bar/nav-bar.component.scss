@@ -1,6 +1,10 @@
 .navbar {
-  background: linear-gradient(90deg, rgba(24,34,56,0.98) 0%, rgba(44,62,80,0.98) 100%);
-  box-shadow: 0 4px 24px rgba(24,34,56,0.12);
+  background: linear-gradient(
+    90deg,
+    rgba(24, 34, 56, 0.98) 0%,
+    rgba(44, 62, 80, 0.98) 100%
+  );
+  box-shadow: 0 4px 24px rgba(24, 34, 56, 0.12);
   padding: 0.8rem 0;
   position: sticky;
   top: 0;
@@ -17,27 +21,28 @@
     padding: 0;
   }
 
-  .navbar-brand i, .navbar-brand .logo {
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
+  .navbar-brand i,
+  .navbar-brand .logo {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
   }
 
   .navbar-nav .nav-link,
   .navbar.ml-auto .nav-link,
   .dropdown-menu .dropdown-item {
     color: #f4f6fa !important;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
 
   .navbar-nav .nav-link:hover,
   .navbar.ml-auto .nav-link:hover,
   .dropdown-menu .dropdown-item:hover {
     color: #4f8cff !important;
-    background: rgba(255,255,255,0.04);
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .navbar-toggler {
     border: none;
-    background: rgba(255,255,255,0.10);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 0.5rem;
     margin-right: 0.5rem;
@@ -92,7 +97,7 @@
         }
 
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           width: 0;
           height: 2px;
@@ -105,6 +110,25 @@
 
         &:hover::after {
           width: 80%;
+        }
+
+        &.active {
+          color: #3498db;
+
+          &::after {
+            width: 80%;
+            background-color: #3498db;
+          }
+
+          &:hover {
+            color: #2980b9;
+            transform: translateY(-1px);
+
+            &::after {
+              background-color: #2980b9;
+              box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+            }
+          }
         }
       }
     }
@@ -187,15 +211,19 @@
           position: absolute;
           top: -5px;
           right: -5px;
-          box-shadow: 0 2px 8px rgba(231,76,60,0.18);
+          box-shadow: 0 2px 8px rgba(231, 76, 60, 0.18);
         }
       }
     }
   }
 
   .dropdown-menu {
-    background: linear-gradient(90deg, rgba(24,34,56,0.98) 0%, rgba(44,62,80,0.98) 100%);
-    box-shadow: 0 8px 32px rgba(24,34,56,0.18);
+    background: linear-gradient(
+      90deg,
+      rgba(24, 34, 56, 0.98) 0%,
+      rgba(44, 62, 80, 0.98) 100%
+    );
+    box-shadow: 0 8px 32px rgba(24, 34, 56, 0.18);
     border-radius: 12px;
     border: none;
     padding: 0.8rem 0;
@@ -291,4 +319,3 @@
     transition: all 0.3s ease;
   }
 }
-

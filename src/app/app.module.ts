@@ -8,10 +8,12 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './core/shared/shared.module';
 import { HttpRequestInterceptor } from './core/interceptors/http.interceptor';
 import { ShopModule } from './shop/shop.module';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
