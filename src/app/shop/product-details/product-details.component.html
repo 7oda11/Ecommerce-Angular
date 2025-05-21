@@ -51,16 +51,19 @@
 
         <div class="price-area my-4">
           <p class="old-price mb-1"><del>{{ product.oldPrice|currency }}</del> <span
-              class="old-price-discount text-danger">(20% off)</span></p>
+              class="old-price-discount text-danger">({{ CalculateDiscount(product.oldPrice, product.newPrice) }}% off)</span></p>
           <p class="new-price text-bold mb-1">{{ product.newPrice|currency }}</p>
 
-          <p class="text-danger">quantity: 1</p>
-          <div>
-            <button class="btn btn-danger text-white" title="Decrease quantity">
+          <p class="text-danger">quantity: {{ quantity }}</p>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-danger text-white" title="Decrease quantity" (click)="DecrementBasket()">
               <i class="fa fa-minus"></i>
             </button>
             &nbsp;
-            <button class="btn btn-dark text-white" title="Increase quantity">
+            <input type="number" class="form-control custom-input-padding" [(ngModel)]="quantity" min="1" max="10" readonly
+              aria-label="Product quantity" title="Product quantity">
+            &nbsp;
+            <button class="btn btn-dark text-white" title="Increase quantity" (click)="IncrementBasket()">
               <i class="fa fa-plus"></i>
             </button>
           </div>
@@ -68,24 +71,19 @@
 
         <div class="buttons d-flex my-5">
           <div class="block pt-2">
-            <a href="#" class="shadow btn custom-btn custom-btn-padding">
+            <button class="shadow btn custom-btn custom-btn-padding" (click)="addToWishlist()">
               <i class="fa fa-heart"></i>
-              Wishlist</a>
+              Wishlist</button>
           </div>
           <div class="block pt-2">
-            <button class="shadow btn custom-btn custom-btn-padding">
+            <button class="shadow btn custom-btn custom-btn-padding" (click)="addToCart()">
               <i class="fa fa-shopping-cart"></i>
               Add to cart</button>
           </div>
           <div class="block pt-2">
-            <button class="shadow btn custom-btn custom-btn-padding">
+            <button class="shadow btn custom-btn custom-btn-padding" (click)="continueShopping()">
               <i class="fa fa-shopping-bag"></i>
-              shopping</button>
-          </div>
-          <div class="block quantity">
-            <label for="cart_quantity" class="form-label">Quantity</label>
-            <input type="number" class="form-control custom-input-padding" id="cart_quantity" value="1" min="0" max="5"
-              name="cart_quantity" placeholder="Enter quantity">
+              Continue Shopping</button>
           </div>
         </div>
       </div>

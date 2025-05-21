@@ -1,26 +1,31 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { Basket, IBasket, IBasketItem } from '../core/shared/Models/Basket';
 import { IProduct } from '../core/shared/Models/Products';
 import { v4 as uuidv4 } from 'uuid';
+import { isPlatformBrowser } from '@angular/common';
+import { catchError, tap, switchMap, finalize } from 'rxjs/operators';
 //localhost:44306/api/Baskets/get-basket-item/basket1
 @Injectable({
   providedIn: 'root',
 })
-export class BasketService implements OnInit {
+export class BasketService {
   BaseURl = 'https://localhost:44306/api/';
   private basketSource = new BehaviorSubject<IBasket>(null);
-  basket = this.basketSource.asObservable();
+  private loadingSource = new BehaviorSubject<boolean>(false);
+  basket$ = this.basketSource.asObservable();
+  loading$ = this.loadingSource.asObservable();
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.initializeBasket();
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.loadBasket();
   }
 
-  private initializeBasket() {
-    if (typeof window !== 'undefined') {
+  private loadBasket() {
+    if (isPlatformBrowser(this.platformId)) {
       const basketId = localStorage.getItem('basketId');
       if (basketId) {
         this.GetBasket(basketId).subscribe();
@@ -28,110 +33,150 @@ export class BasketService implements OnInit {
     }
   }
 
-  GetBasket(id: string) {
-    return this.http
-      .get<IBasket>(this.BaseURl + 'Baskets/get-basket-item/' + id)
-      .pipe(
-        map((basket) => {
+  GetBasket(id: string): Observable<IBasket> {
+    this.loadingSource.next(true);
+    return this.http.get<IBasket>(this.BaseURl + 'Baskets/get-basket-item/' + id).pipe(
+      tap(basket => {
+        if (basket) {
           this.basketSource.next(basket);
-          return basket;
-        })
-      );
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('basketId', basket.id);
+          }
+        } else {
+          this.deleteLocalBasket();
+        }
+      }),
+      catchError(error => {
+        console.error('Error getting basket:', error);
+        this.deleteLocalBasket();
+        return of(null);
+      }),
+      finalize(() => this.loadingSource.next(false))
+    );
   }
 
-  setBasket(basket: IBasket) {
-    console.log('Sending basket data:', basket);
-    return this.http
-      .post(this.BaseURl + 'Baskets/update-basket', basket)
-      .subscribe({
-        next: (response: IBasket) => {
-          console.log('Basket update response:', response);
+  setBasket(basket: IBasket): Observable<IBasket> {
+    if (!basket) return of(null);
+
+    this.loadingSource.next(true);
+    return this.http.post<IBasket>(this.BaseURl + 'Baskets/update-basket', basket).pipe(
+      tap(response => {
+        if (response) {
           this.basketSource.next(response);
-          if (typeof window !== 'undefined') {
+          if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem('basketId', response.id);
           }
-        },
-        error: (err) => {
-          console.error('Error setting basket:', err);
-          if (err.status === 400) {
-            console.error(
-              'Bad Request: The server rejected the basket data:',
-              err.error
-            );
-          }
-          const currentBasket = this.GetCurrentValue();
-          if (currentBasket) {
-            this.basketSource.next(currentBasket);
-          }
-        },
-      });
+        }
+      }),
+      catchError(error => {
+        console.error('Error setting basket:', error);
+        this.deleteLocalBasket();
+        return of(null);
+      }),
+      finalize(() => this.loadingSource.next(false))
+    );
   }
 
-  GetCurrentValue() {
+  getCurrentBasketValue(): IBasket {
     return this.basketSource.value;
   }
 
-  addItemToBasket(item: IProduct | IBasketItem, quantity = 1) {
+  addItemToBasket(item: IProduct | IBasketItem, quantity = 1): Observable<IBasket> {
     try {
-      const itemToAdd: IBasketItem = this.MapProductToBasketItem(
-        item,
-        quantity
-      );
-      let basket = this.GetCurrentValue();
-      if (basket.id == null) {
+      const itemToAdd: IBasketItem = this.MapProductToBasketItem(item, quantity);
+      let basket = this.getCurrentBasketValue();
+
+      if (!basket) {
         basket = this.createBasket();
       }
 
-      if (!basket.id) {
-        basket.id = uuidv4();
+      if (!basket.basketItems) {
+        basket.basketItems = [];
       }
-      basket.basketItems = basket.basketItems ?? [];
 
-      basket.basketItems = this.addOrUpdateItem(
-        basket.basketItems,
-        itemToAdd,
-        quantity
+      const existingItemIndex = basket.basketItems.findIndex(i => i.id === itemToAdd.id);
+
+      if (existingItemIndex > -1) {
+        const newQuantity = basket.basketItems[existingItemIndex].quantity + quantity;
+        if (newQuantity > 10) {
+          throw new Error('Cannot add more than 10 items');
+        }
+        if (newQuantity < 1) {
+          throw new Error('Quantity cannot be less than 1');
+        }
+        basket.basketItems[existingItemIndex].quantity = newQuantity;
+      } else {
+        if (quantity > 10) {
+          throw new Error('Cannot add more than 10 items');
+        }
+        basket.basketItems.push(itemToAdd);
+      }
+
+      return this.setBasket(basket).pipe(
+        tap(response => {
+          if (response) {
+            this.basketSource.next(response);
+          }
+        }),
+        catchError(error => {
+          console.error('Error adding item to basket:', error);
+          return of(null);
+        })
       );
-
-      console.log('Adding item to basket:', {
-        basketId: basket.id,
-        item: itemToAdd,
-        totalItems: basket.basketItems.length,
-      });
-
-      return this.setBasket(basket);
     } catch (error) {
       console.error('Error in addItemToBasket:', error);
-      throw error;
+      return of(null);
     }
   }
 
-  removeItemFromBasket(item: IBasketItem) {
-    const basket = this.GetCurrentValue();
-    if (basket) {
-      basket.basketItems = basket.basketItems.filter((i) => i.id !== item.id);
+  removeItemFromBasket(item: IBasketItem): Observable<IBasket | void> {
+    try {
+      const basket = this.getCurrentBasketValue();
+      if (!basket) return of(null);
+
+      basket.basketItems = basket.basketItems.filter(i => i.id !== item.id);
+
       if (basket.basketItems.length > 0) {
-        this.setBasket(basket);
+        return this.setBasket(basket);
       } else {
-        this.deleteBasket(basket);
+        return this.deleteBasket(basket).pipe(
+          tap(() => {
+            this.deleteLocalBasket();
+          }),
+          catchError(error => {
+            console.error('Error deleting basket:', error);
+            return of(null);
+          })
+        );
       }
+    } catch (error) {
+      console.error('Error removing item from basket:', error);
+      return of(null);
     }
   }
 
-  private deleteBasket(basket: IBasket) {
-    return this.http
-      .delete(this.BaseURl + 'Baskets/delete-basket/' + basket.id)
-      .subscribe({
-        next: () => {
-          this.basketSource.next(null);
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('basketId');
-          }
-        },
-        error: (error) => {
-          console.error('Error deleting basket:', error);
-        },
-      });
+  deleteBasket(basket: IBasket): Observable<void> {
+    if (!basket?.id) return of(null);
+
+    this.loadingSource.next(true);
+    return this.http.delete<void>(this.BaseURl + 'Baskets/delete-basket-item/' + basket.id).pipe(
+      tap(() => {
+        this.deleteLocalBasket();
+      }),
+      catchError(error => {
+        console.error('Error deleting basket:', error);
+        this.deleteLocalBasket();
+        return of(null);
+      }),
+      finalize(() => this.loadingSource.next(false))
+    );
+  }
+
+  private deleteLocalBasket() {
+    this.basketSource.next(null);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('basketId');
+    }
   }
 
   private addOrUpdateItem(
@@ -139,7 +184,7 @@ export class BasketService implements OnInit {
     itemToAdd: IBasketItem,
     quantity: number
   ): IBasketItem[] {
-    const index = basketItems.findIndex((i) => i.id === itemToAdd.id);
+    const index = basketItems.findIndex(i => i.id === itemToAdd.id);
     if (index === -1) {
       itemToAdd.quantity = quantity;
       basketItems.push(itemToAdd);
@@ -151,7 +196,9 @@ export class BasketService implements OnInit {
 
   private createBasket(): IBasket {
     const basket = new Basket();
-    if (typeof window !== 'undefined') {
+    basket.id = uuidv4();
+    basket.basketItems = [];
+    if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('basketId', basket.id);
     }
     return basket;
@@ -162,9 +209,7 @@ export class BasketService implements OnInit {
     quantity: number
   ): IBasketItem {
     if ('photos' in item) {
-      // It's an IProduct
       if (!item || !item.photos || item.photos.length === 0) {
-        console.error('Invalid product data:', item);
         throw new Error('Invalid product data');
       }
 
@@ -178,7 +223,6 @@ export class BasketService implements OnInit {
         description: item.description,
       };
     } else {
-      // It's an IBasketItem
       return {
         ...item,
         quantity: quantity,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BasketService } from '../../basket/basket.service';
-import { Observable } from 'rxjs';
 import { IBasket } from '../shared/Models/Basket';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-nav-bar',
@@ -10,24 +10,21 @@ import { IBasket } from '../shared/Models/Basket';
   styleUrl: './nav-bar.component.scss',
 })
 export class NavBarComponent implements OnInit {
+  private countSource = new BehaviorSubject<number>(0);
+  count$ = this.countSource.asObservable();
+  basket: IBasket;
+
   constructor(private basketService: BasketService) {}
-  count: Observable<IBasket>;
 
   ngOnInit(): void {
-    if (typeof window !== 'undefined') {
-      const basketId = localStorage.getItem('basketId');
-      if (basketId) {
-        this.basketService.GetBasket(basketId).subscribe({
-          next: (basket) => {
-            // console.log("heool");
-            console.log('Basket loaded:', basket);
-            this.count = this.basketService.basket;
-          },
-          error: (error) => {
-            console.error('Error loading basket:', error);
-          },
-        });
+    this.basketService.basket$.subscribe({
+      next: (basket) => {
+        this.basket = basket;
+        this.countSource.next(basket?.basketItems?.length ?? 0);
+      },
+      error: (error) => {
+        console.error('Error loading basket:', error);
       }
-    }
+    });
   }
 }
