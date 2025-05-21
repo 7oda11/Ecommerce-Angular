@@ -54,7 +54,10 @@ export class BasketService implements OnInit {
         error: (err) => {
           console.error('Error setting basket:', err);
           if (err.status === 400) {
-            console.error('Bad Request: The server rejected the basket data:', err.error);
+            console.error(
+              'Bad Request: The server rejected the basket data:',
+              err.error
+            );
           }
           const currentBasket = this.GetCurrentValue();
           if (currentBasket) {
@@ -70,8 +73,16 @@ export class BasketService implements OnInit {
 
   addItemToBasket(item: IProduct, quantity = 1) {
     try {
-      const itemToAdd: IBasketItem = this.MapProductToBasketItem(item, quantity);
-      const basket = this.GetCurrentValue() ?? this.createBasket();
+      const itemToAdd: IBasketItem = this.MapProductToBasketItem(
+        item,
+        quantity
+      );
+      let basket = this.GetCurrentValue();
+      if (basket.id == null) {
+        basket = this.createBasket();
+      }
+
+      this.createBasket();
 
       if (!basket.id) {
         basket.id = uuidv4();
@@ -87,7 +98,7 @@ export class BasketService implements OnInit {
       console.log('Adding item to basket:', {
         basketId: basket.id,
         item: itemToAdd,
-        totalItems: basket.basketItems.length
+        totalItems: basket.basketItems.length,
       });
 
       return this.setBasket(basket);

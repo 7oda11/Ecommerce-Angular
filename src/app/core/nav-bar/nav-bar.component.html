@@ -36,7 +36,7 @@
         <li class="nav-item">
           <a routerLink="/basket" class="nav-link">
             <i class="material-icons" aria-hidden="true">shopping_cart</i>
-            <span class="cart-count">0</span>
+            <span class="cart-count">{{ (count|async).basketItems.length }}</span>
           </a>
         </li>
         <li class="nav-item dropdown">
