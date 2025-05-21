@@ -8,6 +8,7 @@ export interface IBasketItem {
   id: number;
   name: string;
   image: string;
+  description: string;
   quantity: number;
   price: number;
   category: string;

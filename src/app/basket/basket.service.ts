@@ -71,7 +71,7 @@ export class BasketService implements OnInit {
     return this.basketSource.value;
   }
 
-  addItemToBasket(item: IProduct, quantity = 1) {
+  addItemToBasket(item: IProduct | IBasketItem, quantity = 1) {
     try {
       const itemToAdd: IBasketItem = this.MapProductToBasketItem(
         item,
@@ -81,8 +81,6 @@ export class BasketService implements OnInit {
       if (basket.id == null) {
         basket = this.createBasket();
       }
-
-      this.createBasket();
 
       if (!basket.id) {
         basket.id = uuidv4();
@@ -106,6 +104,34 @@ export class BasketService implements OnInit {
       console.error('Error in addItemToBasket:', error);
       throw error;
     }
+  }
+
+  removeItemFromBasket(item: IBasketItem) {
+    const basket = this.GetCurrentValue();
+    if (basket) {
+      basket.basketItems = basket.basketItems.filter((i) => i.id !== item.id);
+      if (basket.basketItems.length > 0) {
+        this.setBasket(basket);
+      } else {
+        this.deleteBasket(basket);
+      }
+    }
+  }
+
+  private deleteBasket(basket: IBasket) {
+    return this.http
+      .delete(this.BaseURl + 'Baskets/delete-basket/' + basket.id)
+      .subscribe({
+        next: () => {
+          this.basketSource.next(null);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('basketId');
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting basket:', error);
+        },
+      });
   }
 
   private addOrUpdateItem(
@@ -132,21 +158,31 @@ export class BasketService implements OnInit {
   }
 
   private MapProductToBasketItem(
-    item: IProduct,
+    item: IProduct | IBasketItem,
     quantity: number
   ): IBasketItem {
-    if (!item || !item.photos || item.photos.length === 0) {
-      console.error('Invalid product data:', item);
-      throw new Error('Invalid product data');
-    }
+    if ('photos' in item) {
+      // It's an IProduct
+      if (!item || !item.photos || item.photos.length === 0) {
+        console.error('Invalid product data:', item);
+        throw new Error('Invalid product data');
+      }
 
-    return {
-      id: item.id,
-      name: item.name,
-      image: item.photos[0].imageName,
-      quantity: quantity,
-      price: item.newPrice,
-      category: item.categoryName,
-    };
+      return {
+        id: item.id,
+        name: item.name,
+        image: item.photos[0].imageName,
+        quantity: quantity,
+        price: item.newPrice,
+        category: item.categoryName,
+        description: item.description,
+      };
+    } else {
+      // It's an IBasketItem
+      return {
+        ...item,
+        quantity: quantity,
+      };
+    }
   }
 }

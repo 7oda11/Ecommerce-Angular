@@ -1,1 +1,96 @@
-<p>basket works!</p>
+@if (basket.id===null) {
+<div class="empty-basket">
+  <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+  <h4>Your basket is empty</h4>
+  <p class="text-muted">Add some products to your basket to continue shopping</p>
+  <a routerLink="/shop" class="btn btn-primary mt-3">
+    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+  </a>
+</div>
+}@else {
+<div class="container pt-4">
+  <div class="basket-layout">
+    <div class="basket-container">
+      <div class="basket-header">
+        <h2><i class="fas fa-shopping-cart me-2"></i>Shopping Basket</h2>
+        <p class="text-muted">{{basket.basketItems.length}} items</p>
+      </div>
+      <div class="table-responsive">
+        <table class="table custom-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Image</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of basket.basketItems; track item.id) {
+            <tr>
+              <td class="product-name">
+                <a [routerLink]="['/shop/product-details', item.id]" class="text-decoration-none">
+                  {{item.name}}
+                </a>
+              </td>
+              <td>
+                <div class="product-image-container">
+                  <img [src]="'https://localhost:44306/' + item.image" class="product-image" [alt]="item.name">
+                </div>
+              </td>
+              <td class="description">
+                {{item.description}}
+              </td>
+              <td class="price">{{item.price | currency}}</td>
+              <td>
+                <div class="quantity-controls">
+                  <button (click)="decrementQuantity(item)" class="btn btn-outline-secondary btn-sm" title="Decrease quantity">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <span class="quantity">{{item.quantity}}</span>
+                  <button (click)="incrementQuantity(item)" class="btn btn-outline-secondary btn-sm" title="Increase quantity">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </td>
+              <td class="total">{{(item.quantity * item.price) | currency}}</td>
+              <td>
+                <button (click)="removeBasketItem(item)" class="btn btn-outline-danger btn-sm" title="Remove item">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="order-summary-container">
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-item">
+          <span>Subtotal</span>
+          <span>{{calculateTotal() | currency}}</span>
+        </div>
+        <div class="summary-item">
+          <span>Shipping</span>
+          <span>Free</span>
+        </div>
+        <div class="summary-item total">
+          <span>Total</span>
+          <span>{{calculateTotal() | currency}}</span>
+        </div>
+        <a routerLink="/checkout" class="btn btn-primary w-100 mt-3">
+          <i class="fas fa-lock me-2"></i>Proceed to Checkout
+        </a>
+        <a routerLink="/shop" class="btn btn-outline-secondary w-100 mt-2">
+          <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+}
