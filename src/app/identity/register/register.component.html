@@ -1,0 +1,74 @@
+<section class="pt-5">
+  <div class="form-container">
+    <h2 class="text-center mb-4">Register</h2>
+    <form [formGroup]="formGroup" (ngSubmit)="Submit()">
+      <div class="form-group mb-3">
+        <label for="username" class="form-label">
+          <i class="fas fa-user me-2"></i>Username
+        </label>
+        <input type="text" class="form-control" formControlName="UserName"
+          [class.is-valid]="_UserName.valid && _UserName.touched"
+          [class.is-invalid]="_UserName.invalid && _UserName.touched"
+          placeholder="Enter username">
+        <div class="invalid-feedback" *ngIf="_UserName.invalid && _UserName.touched">
+          <span *ngIf="_UserName.hasError('required')">Username is required</span>
+          <span *ngIf="_UserName.hasError('minlength')">Username must be at least 6 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="displayName" class="form-label">
+          <i class="fas fa-id-card me-2"></i>Display Name
+        </label>
+        <input type="text" class="form-control" formControlName="DisplayName"
+          [class.is-valid]="_DisplayName.valid && _DisplayName.touched"
+          [class.is-invalid]="_DisplayName.invalid && _DisplayName.touched"
+          placeholder="Enter display name">
+        <div class="invalid-feedback" *ngIf="_DisplayName.invalid && _DisplayName.touched">
+          <span *ngIf="_DisplayName.hasError('required')">Display name is required</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">
+          <i class="fas fa-envelope me-2"></i>Email
+        </label>
+        <input type="email" class="form-control" formControlName="Email"
+          [class.is-valid]="_Email.valid && _Email.touched"
+          [class.is-invalid]="_Email.invalid && _Email.touched"
+          placeholder="Enter email">
+        <div class="invalid-feedback" *ngIf="_Email.invalid && _Email.touched">
+          <span *ngIf="_Email.hasError('required')">Email is required</span>
+          <span *ngIf="_Email.hasError('email')">Please enter a valid email address</span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="password" class="form-label">
+          <i class="fas fa-lock me-2"></i>Password
+        </label>
+        <div class="input-group">
+          <input [type]="hidePassword ? 'password' : 'text'" class="form-control" formControlName="Password"
+            [class.is-valid]="_Password.valid && _Password.touched"
+            [class.is-invalid]="_Password.invalid && _Password.touched"
+            placeholder="Enter password">
+          <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+            <i class="material-icons">{{ hidePassword ? 'visibility_off' : 'visibility' }}</i>
+          </button>
+        </div>
+        <div class="invalid-feedback" *ngIf="_Password.invalid && _Password.touched">
+          <span *ngIf="_Password.hasError('required')">Password is required</span>
+          <span *ngIf="_Password.hasError('pattern')">
+            Password must contain at least one number, one special character (&#35;&#36;&#64;&#33;&#46;), and be at least 8 characters long
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-primary w-100" [disabled]="formGroup.invalid">
+          <i class="fas fa-user-plus me-2"></i>Register
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

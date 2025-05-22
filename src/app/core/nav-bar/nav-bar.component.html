@@ -4,13 +4,15 @@
       <img src="./favicon.ico" class="logo" alt="">
       <i class="tect-white">E-Commerce</i>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <i class="material-icons">menu</i>
     </button>
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">Home</a>
+          <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+            class="nav-link">Home</a>
         </li>
         <li class="nav-item">
           <a [routerLink]="['/shop']" routerLinkActive="active" class="nav-link">Shopping</a>
@@ -40,14 +42,20 @@
           </a>
         </li>
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
             <i class="material-icons" aria-hidden="true">account_circle</i>
           </a>
           <ul class="dropdown-menu" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" routerLink="/register"><i class="material-icons" aria-hidden="true">person_add</i> Register</a></li>
-            <li><a class="dropdown-item" routerLink="/login"><i class="material-icons" aria-hidden="true">login</i> Login</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" routerLink="/orders"><i class="material-icons" aria-hidden="true">list_alt</i> My Orders</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/account/register']" routerLinkActive="active"><i class="material-icons"
+                  aria-hidden="true">person_add</i> Register</a></li>
+            <li><a class="dropdown-item" routerLink="/login"><i class="material-icons" aria-hidden="true">login</i>
+                Login</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" routerLink="/orders"><i class="material-icons" aria-hidden="true">list_alt</i>
+                My Orders</a></li>
           </ul>
         </li>
       </ul>
