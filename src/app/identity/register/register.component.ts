@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IdentityService } from '../identity.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private identityService: IdentityService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -58,10 +60,13 @@ export class RegisterComponent implements OnInit {
       this.identityService.Register(this.formGroup.value).subscribe({
         next: () => {
           console.log('Register Success');
-          this.toastr.success('Register Success ,please confirm your email',"SUCCESS");
+          this.toastr.success('Register Success, please confirm your email', 'SUCCESS');
+          setTimeout(() => {
+            this.router.navigate(['/account/login']);
+          }, 2000);
         },
-        error: (error:any) => {
-          this.toastr.error(error.error.message,"ERROR");
+        error: (error: any) => {
+          this.toastr.error(error.error.message, 'ERROR');
         },
       });
     }

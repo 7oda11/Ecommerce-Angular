@@ -63,7 +63,7 @@ export class ActiveComponent implements OnInit {
         this.toastr.clear();
         this.toastr.success('Account activated successfully', 'SUCCESS');
         setTimeout(() => {
-          this.router.navigate(['/account/register']);
+          this.router.navigate(['/account/login']);
         }, 2000);
       },
       error: (err) => {
