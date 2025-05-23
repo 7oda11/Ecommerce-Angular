@@ -1,59 +1,167 @@
-# Client
+# E-Commerce Web Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+A full-stack e-commerce application built with Angular and .NET Core, featuring a modern UI and comprehensive user management system.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### Authentication & User Management
+- **User Registration**
+  - Email verification system
+  - Password validation
+  - User profile creation
+  - Display name and username support
 
+- **User Login**
+  - Secure authentication
+  - Remember me functionality
+  - Password visibility toggle
+  - Form validation with visual feedback
+
+- **Password Management**
+  - Forget password functionality
+  - Email-based password reset
+  - Secure token-based reset links
+  - Password confirmation system
+
+### User Interface
+- Modern, responsive design using Bootstrap
+- Interactive form validation
+- Real-time feedback for user actions
+- Loading states and spinners
+- Toast notifications for user feedback
+
+### Security Features
+- JWT-based authentication
+- Password encryption
+- Email verification
+- Secure password reset flow
+- Form validation and sanitization
+
+## Technical Stack
+
+### Frontend
+- Angular 17
+- Bootstrap 5
+- Font Awesome icons
+- ngx-toastr for notifications
+- Reactive Forms for form handling
+
+### Backend
+- .NET Core Web API
+- Entity Framework Core
+- SQL Server
+- JWT Authentication
+- Email Service Integration
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── core/
+│   │   └── shared/
+│   │       └── Models/
+│   │           ├── LoginDTO
+│   │           ├── RegisterDTO
+│   │           ├── ResetPasswordDTO
+│   │           └── ActiveAccountDTO
+│   ├── identity/
+│   │   ├── login/
+│   │   ├── register/
+│   │   ├── reset-password/
+│   │   └── identity.service.ts
+│   └── shared/
+└── assets/
+```
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- .NET Core SDK (v7 or higher)
+- SQL Server
+- Angular CLI
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone [repository-url]
+```
+
+2. Install frontend dependencies
+```bash
+cd client
+npm install
+```
+
+3. Install backend dependencies
+```bash
+cd ../server
+dotnet restore
+```
+
+4. Configure the database
+- Update connection string in `appsettings.json`
+- Run database migrations
+
+5. Start the development servers
+
+Frontend:
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+Backend:
 ```bash
-ng generate component component-name
+dotnet run
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## API Endpoints
 
-```bash
-ng generate --help
-```
+### Authentication
+- `POST /api/Account/Register` - User registration
+- `POST /api/Account/Login` - User login
+- `POST /api/Account/active-account` - Email verification
+- `GET /api/Account/send-email-forget-password` - Password reset request
+- `POST /api/Account/reset-password` - Password reset
 
-## Building
+## Features in Detail
 
-To build the project run:
+### User Registration
+- Email and password validation
+- Username and display name requirements
+- Email verification system
+- Success/error notifications
 
-```bash
-ng build
-```
+### Login System
+- Email and password authentication
+- Remember me functionality
+- Password visibility toggle
+- Form validation with visual feedback
+- Loading states during authentication
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Password Reset
+- Email-based reset request
+- Secure token generation
+- Password confirmation
+- Visual feedback for all steps
+- Automatic modal handling
 
-## Running unit tests
+## Contributing
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
-```bash
-ng test
-```
+## License
 
-## Running end-to-end tests
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-For end-to-end (e2e) testing, run:
+## Acknowledgments
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Bootstrap for the UI components
+- Font Awesome for the icons
+- ngx-toastr for notifications
