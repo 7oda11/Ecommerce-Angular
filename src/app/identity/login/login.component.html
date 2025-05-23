@@ -1,0 +1,96 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-center mb-4">Login</h3>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <div class="input-group">
+                <input type="email" class="form-control" id="email" formControlName="email" [ngClass]="{
+                    'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched,
+                    'is-valid': loginForm.get('email')?.valid && loginForm.get('email')?.touched
+                  }" />
+                <span class="input-group-text" *ngIf="loginForm.get('email')?.valid && loginForm.get('email')?.touched">
+                  <i class="fas fa-check text-success"></i>
+                </span>
+              </div>
+              <div class="invalid-feedback" *ngIf="
+                  loginForm.get('email')?.errors?.['required'] &&
+                  loginForm.get('email')?.touched
+                ">
+                Email is required
+              </div>
+              <div class="invalid-feedback" *ngIf="
+                  loginForm.get('email')?.errors?.['email'] &&
+                  loginForm.get('email')?.touched
+                ">
+                Please enter a valid email
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password"
+                  formControlName="password" [ngClass]="{
+                    'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+                    'is-valid': loginForm.get('password')?.valid && loginForm.get('password')?.touched
+                  }" />
+                <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                  <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
+                <span class="input-group-text" *ngIf="loginForm.get('password')?.valid && loginForm.get('password')?.touched">
+                  <i class="fas fa-check text-success"></i>
+                </span>
+              </div>
+              <div class="invalid-feedback" *ngIf="
+                  loginForm.get('password')?.errors?.['required'] &&
+                  loginForm.get('password')?.touched
+                ">
+                Password is required
+              </div>
+              <div class="invalid-feedback" *ngIf="
+                  loginForm.get('password')?.errors?.['minlength'] &&
+                  loginForm.get('password')?.touched
+                ">
+                Password must be at least 6 characters
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+                  aria-hidden="true"></span>
+                {{ isLoading ? 'Logging in...' : 'Login' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Forget password </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" placeholder="example@email.com" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

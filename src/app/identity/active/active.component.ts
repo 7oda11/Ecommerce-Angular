@@ -73,7 +73,7 @@ export class ActiveComponent implements OnInit {
         this.toastr.clear();
         // this.toastr.error('Your account is not active, token is expired', 'ERROR');
         setTimeout(() => {
-          this.router.navigate(['/account/register']);
+          this.router.navigate(['/account/login']);
         }, 2000);
       },
       complete: () => {

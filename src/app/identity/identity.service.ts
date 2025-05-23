@@ -15,4 +15,7 @@ export class IdentityService {
   ActiveAccount(param: ActiveAccount) {
     return this.http.post(this.baseUrl + 'Account/active-account', param);
   }
+  Login(form: any) {
+    return this.http.post(this.baseUrl + 'Account/Login', form);
+  }
 }
