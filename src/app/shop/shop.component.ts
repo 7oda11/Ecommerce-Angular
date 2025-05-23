@@ -19,9 +19,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './shop.component.scss',
 })
 export class ShopComponent implements OnInit {
-  public product: IProduct[];
-  public category: ICategory[];
-  public totalCount: number;
+  public product: IProduct[] = [];
+  public category: ICategory[] = [];
+  public totalCount: number = 0;
   // public categoryId: number;
   // public sortSelected: string = 'PriceDes';
   // search: string;
@@ -53,6 +53,7 @@ export class ShopComponent implements OnInit {
       error: (err: any) => {
         console.error('Error fetching products:', err);
         this.product = [];
+        this._toastr.error('Failed to fetch products', 'ERROR');
       },
     });
   }
@@ -65,6 +66,11 @@ export class ShopComponent implements OnInit {
       next: (value: any) => {
         this.category = value;
       },
+      error: (err: any) => {
+        console.error('Error fetching categories:', err);
+        this.category = [];
+        this._toastr.error('Failed to fetch categories', 'ERROR');
+      }
     });
   }
 

@@ -1,0 +1,31 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <!-- Loading State -->
+          <div *ngIf="activationStatus === 'loading'" class="mb-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Activating your account...</p>
+          </div>
+
+          <!-- Success State -->
+          <div *ngIf="activationStatus === 'success'" class="mb-4">
+            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+            <h4>Account Activated Successfully!</h4>
+            <p>Your account has been activated. Redirecting to login page...</p>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="activationStatus === 'error'" class="mb-4">
+            <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
+            <h4>Activation Failed</h4>
+            <p>There was a problem activating your account. Redirecting to registration page...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

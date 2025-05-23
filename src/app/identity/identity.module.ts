@@ -4,10 +4,12 @@ import { IdentityRoutingModule } from './identity-routing.module';
 import { RegisterComponent } from './register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ActiveComponent } from './active/active.component';
 
 @NgModule({
   declarations: [
-    RegisterComponent
+    RegisterComponent,
+    ActiveComponent
   ],
   imports: [
     CommonModule,
